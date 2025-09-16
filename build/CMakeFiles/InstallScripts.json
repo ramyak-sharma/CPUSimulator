@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/ramyaksharma/Desktop/CPU/build/cmake_install.cmake",
+		"/Users/ramyaksharma/Desktop/CPU/build/vendor/raylib/cmake_install.cmake",
+		"/Users/ramyaksharma/Desktop/CPU/build/vendor/raylib/raylib/cmake_install.cmake",
+		"/Users/ramyaksharma/Desktop/CPU/build/vendor/raylib/raylib/external/glfw/cmake_install.cmake",
+		"/Users/ramyaksharma/Desktop/CPU/build/vendor/raylib/raylib/external/glfw/src/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
