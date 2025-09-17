@@ -9,15 +9,14 @@
 #include "components/gates/outLight.h"
 #include <functional>
 
-// Specialize std::hash for std::pair<unsigned int, unsigned int>
+// specialized std::hash for std::pair<unsigned int, unsigned int>, function written by AI
 namespace std {
     template <>
     struct hash<std::pair<unsigned int, unsigned int>> {
         size_t operator()(const std::pair<unsigned int, unsigned int>& p) const {
-            // Combine the hash of both elements
             auto h1 = std::hash<unsigned int>{}(p.first);
             auto h2 = std::hash<unsigned int>{}(p.second);
-            return h1 ^ (h2 << 1);  // Simple but effective combination
+            return h1 ^ (h2 << 1);  
         }
     };
 }

@@ -1,7 +1,7 @@
 #include <vector>
 #include <string>
 #include "core/drawManager.h"
-#include "core/inputManager.h" // For IM::mode
+#include "core/inputManager.h"
 #include "raygui.h"
 
 namespace DM {

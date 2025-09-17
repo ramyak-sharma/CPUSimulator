@@ -83,7 +83,6 @@ namespace IM {
         }
 
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && selectedComponent != nullptr) {
-            // Use the setter to ensure node positions are also updated
             selectedComponent->setPosition(Vector2Add(mouse, dragOffset));
 
         }
@@ -93,7 +92,7 @@ namespace IM {
                 bool deselect = true;
                 if (CheckCollisionRecs(selectedComponent->getInteractionBounds(), dustbin)) {
                     circuit.removeComponent(selectedComponent->getId());
-                } else if (selectedComponent->isToggleable()) { // Use the virtual capability function
+                } else if (selectedComponent->isToggleable()) { 
                     selectedComponent->toggle();
                     circuit.onClockTick();
                     deselect = false;
