@@ -5,20 +5,19 @@
 
 class Component;
 
-struct Node : public std::enable_shared_from_this<Node>{
+struct Node {
 
     static unsigned int ID;
-    unsigned int m_id;
+    unsigned int id;
 
     LogicState nextState = LogicState::LOW;
     LogicState currentState = LogicState::LOW;
+    Node* incomingConnection = nullptr;
 
     Vector2 position = {0.0f, 0.0f};
     float radius = 5;
     Color color;
     NodeType type;
-
-    unsigned int owner; 
 
     Node();
 };

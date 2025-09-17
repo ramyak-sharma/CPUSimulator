@@ -1,37 +1,31 @@
-#include "components/gates/notGate.h"
-#include <iostream>
+#include "notGate.h"
+
+NotGate::NotGate(unsigned int id) : Component(id) {
+    m_type = ComponentType::NOT_GATE;
+    m_label = "NOT";
+    m_size = {75, 50};
+    m_color = {200, 50, 50, 255};
+    m_nextColor = m_color;
+
+    m_inputNodes.resize(1);
+    m_inputNodes[0].type = NodeType::INPUT;
+    
+    m_outputNodes.resize(1);
+    m_outputNodes[0].type = NodeType::OUTPUT;
+
+    setPosition(m_position);
+}
 
 void NotGate::evaluate() {
-    if(m_inputNodes[0]->currentState == LogicState::LOW) 
-        m_outputNodes[0]->nextState = LogicState::HIGH;
-    else 
-        m_outputNodes[0]->nextState = LogicState::LOW;
+
+    LogicState inputState = m_inputNodes[0].incomingConnection 
+                            ? m_inputNodes[0].incomingConnection->currentState 
+                            : LogicState::LOW;
+
+    m_outputNodes[0].nextState = (inputState == LogicState::LOW) 
+                                 ? LogicState::HIGH : LogicState::LOW;
 }
 
 void NotGate::commit() {
-    m_outputNodes[0]->currentState = m_outputNodes[0]->nextState;
-}
-
-NotGate::NotGate(unsigned int id)
-    : Component(id)
-{
-    m_inputNodes.push_back(std::make_shared<Node>());
-    m_outputNodes.push_back(std::make_shared<Node>());
-
-    m_type = ComponentType::NOT_GATE;
-
-    m_size = {50, 25};
-    m_color = RED;
-    m_label = "NOT";
-
-    m_inputNodes[0]->type = NodeType::INPUT;
-    m_inputNodes[0]->owner = id;
-
-    m_outputNodes[0]->type = NodeType::OUTPUT;
-    m_outputNodes[0]->owner = id;
-
-}
-
-void NotGate::display() const{
-    std::cout << "\nNOT GATE, component id: " << m_id << "\n";
+    m_outputNodes[0].currentState = m_outputNodes[0].nextState;
 }

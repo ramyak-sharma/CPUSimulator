@@ -4,58 +4,63 @@
 #include "raymath.h"
 #include "core/inputManager.h"
 #include "core/drawManager.h"
-#include "core/circuit.h"
+
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
 int main() {
-    const int screenWidth = 800;
-    const int screenHeight = 600;
-	
-	#ifdef __APPLE__
-		SetConfigFlags(FLAG_WINDOW_HIGHDPI);
-	#endif
+    int screenWidth = 1280;
+    int screenHeight = 800;
 
-    InitWindow(screenWidth, screenHeight, "Coordinate System Test");
+    #ifdef __APPLE__
+        unsigned int flags = FLAG_WINDOW_HIGHDPI;
+    #endif
 
-	Circuit circuit;
+    SetConfigFlags(flags);
 
-    Texture2D texture = LoadTexture("../assets/dustbin.jpeg");
-
-    // Source rectangle uses the full texture
-    Rectangle sourceRec = { 0, 0, (float)texture.width, (float)texture.height };
-
-    // Destination rectangle is smaller and positioned at bottom-right
-    float desiredWidth = 50.0f;
-    float desiredHeight = 50.0f;
-    Rectangle destRec = {
-        screenWidth - desiredWidth,
-        screenHeight - desiredHeight,
-        desiredWidth,
-        desiredHeight
-    };
-
+    InitWindow(screenWidth, screenHeight, "CPU Simulator");
     SetTargetFPS(60);
 
-	Component* selectedComponent = nullptr;
-	Vector2 dragOffset = { 0.0f, 0.0f };
+    Circuit circuit;
+
+    Texture2D texture = LoadTexture("../assets/dustbin.jpeg");
+    Rectangle sourceRec = { 0, 0, (float)texture.width, (float)texture.height };
+
+    Component* selectedComponent = nullptr;
+    Vector2 dragOffset = { 0.0f, 0.0f };
+
+    bool autoTickEnabled = false;
+    float tickSpeed = 1.0f;
+    double lastTickTime = GetTime();
 
     while (!WindowShouldClose()) {
-		IM::manageInput(circuit, selectedComponent, dragOffset, destRec);
-		
-        BeginDrawing();
-		  
-            ClearBackground(DARKGRAY);
+        screenWidth = GetScreenWidth();
+        screenHeight = GetScreenHeight();
 
-            DM::drawDustbin(texture, sourceRec, destRec);
-		
-            DM::drawComponents(circuit);
+        float desiredWidth = 50.0f;
+        float desiredHeight = 50.0f;
+        Rectangle destRec = {
+            screenWidth - desiredWidth - 10,
+            screenHeight - desiredHeight - 10,
+            desiredWidth,
+            desiredHeight
+        };
+
+        IM::manageInput(circuit, selectedComponent, dragOffset, destRec);
         
+        BeginDrawing();
+            ClearBackground(DARKGRAY);
+            
+            DM::drawComponents(circuit);
+            DM::drawWires(circuit);
+            DM::drawGhostWire();
+            DM::drawDustbin(texture, sourceRec, destRec);
             DM::drawGUI(screenWidth, screenHeight, circuit);
-		
+            
         EndDrawing();
-	}
+    }
 
+    UnloadTexture(texture);
     CloseWindow();
     return 0;
 }

@@ -12,7 +12,7 @@ enum class InteractionMode{
 };
 
 enum class ComponentType{
-    AND_GATE, NOT_GATE
+    AND_GATE, NOT_GATE, INLIGHT, OUTLIGHT
 };
 
 enum class NodeType {

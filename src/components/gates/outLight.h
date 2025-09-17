@@ -1,10 +1,11 @@
 #pragma once
 #include "components/component.h"
 
-class AndGate : public Component {
+class OutLight : public Component {
 public:
-    AndGate(unsigned int id);
-    
+    OutLight(unsigned int id);
+
     void evaluate() override;
+    
     void commit() override;
 };

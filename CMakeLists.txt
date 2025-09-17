@@ -11,6 +11,8 @@ set (SOURCES
 	src/components/node.cpp
 	src/components/gates/andGate.cpp
 	src/components/gates/notGate.cpp
+	src/components/gates/inLight.cpp
+	src/components/gates/outLight.cpp
 )
 
 add_subdirectory(vendor/raylib)
