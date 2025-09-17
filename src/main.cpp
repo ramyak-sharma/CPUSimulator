@@ -47,7 +47,7 @@ int main() {
 		  
             ClearBackground(DARKGRAY);
 
-            DrawTexturePro(texture, sourceRec, destRec, (Vector2){0, 0}, 0.0f, WHITE);
+            DM::drawDustbin(texture, sourceRec, destRec);
 		
             DM::drawComponents(circuit);
         

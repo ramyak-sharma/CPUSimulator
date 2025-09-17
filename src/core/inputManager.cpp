@@ -7,16 +7,59 @@ namespace IM{
 	void manageInput(Circuit& circuit, Component*& selectedComponent, Vector2& dragOffset, Rectangle dustbin){
 		switch(mode){
 		case InteractionMode::NORMAL:
-			dragAndDrop(circuit, selectedComponent, dragOffset, dustbin);
+			mouseEvents(circuit, selectedComponent, dragOffset, dustbin);
 			break;
 		case InteractionMode::WIRING:
-
+			mouseHovering(circuit);
 			break;
 		}
 
 	}
 
-	void dragAndDrop(Circuit& circuit, Component*& selectedComponent, Vector2& dragOffset, Rectangle dustbin){
+	Node* getClickedNode(Circuit& circuit, Vector2 mousePosition) {
+	    for (const auto& component : circuit.getAllComponents()) {
+	        // Check input nodes
+	        for (const auto& node : component->m_inputNodes) {
+	            if (CheckCollisionPointCircle(mousePosition, node->position, node->radius)) {
+	                return node.get(); 
+	            }
+	        }
+	        
+	        // Check output nodes
+	        for (const auto& node : component->m_outputNodes) {
+	            if (CheckCollisionPointCircle(mousePosition, node->position, node->radius)) {
+	                return node.get();
+	            }
+	        }
+	    }
+	    return nullptr;
+	}
+
+	void mouseHovering(Circuit& circuit){
+	    Vector2 mouse = GetMousePosition();
+	    bool isHoveringAnyNode = false;
+	    Color c = GRAY;
+	    for(const auto& component : circuit.getAllComponents()){
+	        for(const auto& node : component->m_inputNodes){
+	            node->color = c; 
+	            if(CheckCollisionPointCircle(mouse, node->position, node->radius + 1)){
+	                node->color = GREEN;
+	                isHoveringAnyNode = true;
+	            }
+	        }
+	      
+	        for(const auto& node : component->m_outputNodes){
+	            node->color = c;
+	            
+	            if(CheckCollisionPointCircle(mouse, node->position, node->radius + 1)){
+	                node->color = GREEN;
+	                isHoveringAnyNode = true;
+	            }
+	        }
+	    }
+	}
+
+	void mouseEvents(Circuit& circuit, Component*& selectedComponent, Vector2& dragOffset, Rectangle dustbin){
 
 		Vector2 mouse = GetMousePosition();
 		const auto& components = circuit.getAllComponents();

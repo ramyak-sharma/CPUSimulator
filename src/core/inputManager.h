@@ -12,9 +12,10 @@ namespace IM{
 
 	Rectangle getInteractionBounds(Component* c);
 
-	void dragAndDrop(Circuit& circuit, Component*& selectedComponent, Vector2& dragOffset, Rectangle dustbin);
-
+	void mouseEvents(Circuit& circuit, Component*& selectedComponent, Vector2& dragOffset, Rectangle dustbin);
+	void mouseHovering(Circuit& circuit);
 	void manageInput(Circuit& circuit, Component*& selectedComponent, Vector2& dragOffset, Rectangle dustbin);
+	Node* getClickedNode(Circuit& circuit, Vector2 mousePosition);
 
 
 };

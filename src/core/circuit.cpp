@@ -3,6 +3,20 @@
 
 unsigned int Circuit::m_idCounter = 0;
 
+void Wire::evaluate() const{
+	if (auto srcLocked = src.lock()) {
+        if (auto dstLocked = dst.lock()) {
+            dstLocked->nextState = srcLocked->currentState;
+        }
+    }
+}
+
+void Wire::commit() const{
+	if (auto dstLocked = dst.lock()) {
+        dstLocked->currentState = dstLocked->nextState;
+    }
+}
+
 Component* Circuit::addComponent(ComponentType type){
 	unsigned int newId = ++m_idCounter;
 	std::unique_ptr<Component> newComponent = nullptr;
@@ -49,25 +63,51 @@ void Circuit::onClockTick() {
         component->evaluate();
     }
 
+    for (const auto& wire : m_wires) {
+        wire.evaluate();
+    }
+
     for (const auto& component : m_components) {
         component->commit();
+    }
+
+    for (const auto& wire : m_wires) {
+        wire.commit();
     }
 }
 
 void Circuit::removeComponent(unsigned int id){
-	for(const auto& component : m_components){
-		if(component->getId() == id){
-			m_components.erase(m_components.begin());
-		}
-	}
+	auto it = std::remove_if(m_components.begin(), m_components.end(), 
+		[id](const std::unique_ptr<Component>& component){return component->getId() == id;});
+	m_components.erase(it, m_components.end());
 }
 
-void Circuit::connectNodes() {
+bool Circuit::connectNodes(std::weak_ptr<Node>& src, std::weak_ptr<Node>& dst) {
+    // Lock the weak pointers to get shared pointers
+    auto srcLocked = src.lock();
+    auto dstLocked = dst.lock();
+    
+    // Check if nodes still exist
+    if(!srcLocked || !dstLocked) return false;
 
-}
-
-void Circuit::propogateUpdates(){
-
+    // Check node types and swap if needed
+    if(srcLocked->type == NodeType::INPUT && dstLocked->type == NodeType::OUTPUT) {
+        std::swap(src, dst);
+        // Re-lock after swap
+        srcLocked = src.lock();
+        dstLocked = dst.lock();
+    }
+    
+    // Check valid connection
+    if(srcLocked->type == NodeType::OUTPUT && dstLocked->type == NodeType::INPUT){
+        Wire newWire;
+        newWire.src = src;  // Already weak_ptr, no need to convert
+        newWire.dst = dst;  // Already weak_ptr, no need to convert
+        m_wires.push_back(newWire);
+        return true;
+    }
+    
+    return false;
 }
 
 // helper functions
