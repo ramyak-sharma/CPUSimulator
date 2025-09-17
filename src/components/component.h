@@ -2,12 +2,16 @@
 #include <vector>
 #include "components/common.h"
 #include "raylib.h"
+#include "node.h"
+#include "raymath.h"
 
-class Component {
+class Component  {
 public:
     virtual ~Component() = default;
 
-    virtual void update() = 0;
+    virtual void evaluate() = 0;
+
+    virtual void commit() = 0;
 
     virtual void display() const = 0;
 
@@ -17,12 +21,15 @@ public:
     
     Rectangle getInteractionBounds() const;
 
+
 public:
-	float m_x = 0;
-	float m_y = 0;
-	float m_width = 100;
-	float m_height = 100;
+	Vector2 m_position = {0, 0};
+	Vector2 m_size = {100, 50};
+    Color m_color = BLACK;
+    std::string m_label = "default";
 	ComponentType m_type;
+    std::vector<std::shared_ptr<Node>> m_inputNodes;
+    std::vector<std::shared_ptr<Node>> m_outputNodes;
 
 protected:
     Component(unsigned int id) : m_id(id) {}

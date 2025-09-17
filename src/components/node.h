@@ -1,23 +1,23 @@
 #pragma once
 #include <iostream>
 #include "common.h"
+#include "raylib.h"
+
+class Component;
 
 struct Node {
+
     static unsigned int ID;
     unsigned int m_id;
-    LogicState state = LogicState::LOW;
+
+    LogicState nextState = LogicState::LOW;
+    LogicState currentState = LogicState::LOW;
+
+    Vector2 position = {0.0f, 0.0f};
     NodeType type;
-    class Component* owner = nullptr;
+
+    unsigned int owner; 
+    std::vector<std::unique_ptr<Node>> out_connections;
 
     Node();
 };
-
-inline std::ostream& operator<<(std::ostream& os, const Node& node){
-    std::string state = "HIGH";
-    std::string type = "OUTPUT";
-    if(node.state == LogicState::LOW) state = "LOW";
-    if(node.type == NodeType::INPUT) type = "INPUT";
-
-    os << " " << type << "      " << state;
-    return os;
-}

@@ -6,14 +6,11 @@ class NotGate : public Component {
 public:
     NotGate(unsigned int id);
 
-    void update() override;
+    void evaluate() override;
+
+    void commit() override;
 
     void display() const override;
-
-private:
-
-    Node m_input;
-    Node m_output;
 
 };
 

@@ -6,26 +6,34 @@
 #include "components/gates/andGate.h"
 #include "components/gates/notGate.h"
 
+struct Wire
+{
+	std::weak_ptr<Node>src;
+	std::weak_ptr<Node> dst;
+};
 
 class Circuit
 {
 private:
-	std::vector<std::unique_ptr<Component>> m_components;
+	std::vector<std::unique_ptr<Component>> m_components; //unnecessary but never got the chance to use smart ptrs
+	std::vector<std::unique_ptr<Wire>> m_wires;
 
 	static unsigned int m_idCounter;
 
 public:
 	Component* addComponent(ComponentType type);
 
-	const Component* getComponent(unsigned int id) const;
+	void removeComponent(unsigned int id);
+
+	const Component* getComponentById(unsigned int id) const;
 
 	const std::vector<std::unique_ptr<Component>>& getAllComponents() const;
 
-	Component* getComponent(unsigned int id);
+	Component* getComponentById(unsigned int id);
 
-	void connectNodes(unsigned int id1, unsigned int id2);
+	void connectNodes();
 
-	void displayComponents() const;
+	void onClockTick();
 
 	void propogateUpdates();
 };

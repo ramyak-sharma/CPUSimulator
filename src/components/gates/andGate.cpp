@@ -1,31 +1,42 @@
 #include "components/gates/andGate.h"
 #include <iostream>
 
-void AndGate::update() {
+void AndGate::evaluate() {
     LogicState result = LogicState::HIGH;
-    if (m_input1.state == LogicState::LOW || m_input2.state == LogicState::LOW) {
+    if (m_inputNodes[0]->currentState == LogicState::LOW || m_inputNodes[1]->currentState == LogicState::LOW) {
         result = LogicState::LOW;
     }
-    m_output.state = result;
+    m_outputNodes[0]->nextState = result;
+}
+
+void AndGate::commit() {
+    m_outputNodes[0]->currentState = m_outputNodes[0]->nextState;
 }
 
 AndGate::AndGate(unsigned int id)
     : Component(id)
 {
+    m_inputNodes.push_back(std::make_shared<Node>());
+    m_inputNodes.push_back(std::make_shared<Node>());
+    m_outputNodes.push_back(std::make_shared<Node>());
+
     m_type = ComponentType::AND_GATE;
-   
-    m_input1.type = NodeType::INPUT;
-    m_input1.owner = this; 
 
-    m_input2.type = NodeType::INPUT;
-    m_input2.owner = this; 
+    m_size = {75, 50};
+    m_color = BLUE;
+    m_label = "AND";
 
-    m_output.type = NodeType::OUTPUT;
-    m_output.owner = this;
+    m_inputNodes[0]->type = NodeType::INPUT;
+    m_inputNodes[0]->owner = id;
+
+    m_inputNodes[1]->type = NodeType::INPUT;
+    m_inputNodes[1]->owner = id;
+
+    m_outputNodes[0]->type = NodeType::OUTPUT;
+    m_outputNodes[0]->owner = id;
 }
 
 
 void AndGate::display() const{
-    std::cout << "\nAND GATE, component id: " << m_id << "\n";
-    std::cout << "input 1: " << m_input1 << "\ninput 2: " << m_input2 << "\noutput: " << m_output << "\n";    
+    std::cout << "\nAND GATE, component id: " << m_id << "\n";  
 }

@@ -5,15 +5,12 @@
 class AndGate : public Component {
 public:
     AndGate(unsigned int id);
+    
+    void evaluate() override;
 
-    void update() override;
+    void commit() override;
 
     void display() const override;
 
-private:
-
-    Node m_input1;
-    Node m_input2;
-    Node m_output;
 };
 

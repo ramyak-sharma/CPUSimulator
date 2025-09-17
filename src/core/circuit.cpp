@@ -25,7 +25,7 @@ Component* Circuit::addComponent(ComponentType type){
     
 }
 
-const Component* Circuit::getComponent(unsigned int id) const{
+const Component* Circuit::getComponentById(unsigned int id) const{
 	for(const auto& component : m_components){
 		if(component->getId() == id){
 			return component.get();
@@ -38,25 +38,36 @@ const std::vector<std::unique_ptr<Component>>& Circuit::getAllComponents() const
 	return m_components;
 }
 
-Component* Circuit::getComponent(unsigned int id){
+Component* Circuit::getComponentById(unsigned int id){
 	return const_cast<Component*>(
-        static_cast<const Circuit*>(this)->getComponent(id)
+        static_cast<const Circuit*>(this)->getComponentById(id)
     );
 }
 
-void Circuit::displayComponents() const{
+void Circuit::onClockTick() {
+    for (const auto& component : m_components) {
+        component->evaluate();
+    }
+
+    for (const auto& component : m_components) {
+        component->commit();
+    }
+}
+
+void Circuit::removeComponent(unsigned int id){
 	for(const auto& component : m_components){
-		component->display();
+		if(component->getId() == id){
+			m_components.erase(m_components.begin());
+		}
 	}
 }
 
-void Circuit::connectNodes(unsigned int id1, unsigned int id2){
-	m_connections[id1].push_back(id2);
+void Circuit::connectNodes() {
+
 }
 
-
 void Circuit::propogateUpdates(){
-	
+
 }
 
 // helper functions

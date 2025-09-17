@@ -17,23 +17,43 @@ int main() {
 	#endif
 
     InitWindow(screenWidth, screenHeight, "Coordinate System Test");
-    SetTargetFPS(60);
 
 	Circuit circuit;
-	circuit.addComponent(ComponentType::AND_GATE);
-	circuit.addComponent(ComponentType::NOT_GATE);
-	circuit.displayComponents();
+
+    Texture2D texture = LoadTexture("../assets/dustbin.jpeg");
+
+    // Source rectangle uses the full texture
+    Rectangle sourceRec = { 0, 0, (float)texture.width, (float)texture.height };
+
+    // Destination rectangle is smaller and positioned at bottom-right
+    float desiredWidth = 50.0f;
+    float desiredHeight = 50.0f;
+    Rectangle destRec = {
+        screenWidth - desiredWidth,
+        screenHeight - desiredHeight,
+        desiredWidth,
+        desiredHeight
+    };
+
+    SetTargetFPS(60);
 
 	Component* selectedComponent = nullptr;
 	Vector2 dragOffset = { 0.0f, 0.0f };
 
     while (!WindowShouldClose()) {
-		IM::dragAndDrop(circuit, selectedComponent, dragOffset);
-		BeginDrawing();
-		ClearBackground(DARKGRAY);
-		DM::drawComponents(circuit);
-        DM::drawGUI(screenWidth, screenHeight, circuit);
-		EndDrawing();
+		IM::manageInput(circuit, selectedComponent, dragOffset, destRec);
+		
+        BeginDrawing();
+		  
+            ClearBackground(DARKGRAY);
+
+            DrawTexturePro(texture, sourceRec, destRec, (Vector2){0, 0}, 0.0f, WHITE);
+		
+            DM::drawComponents(circuit);
+        
+            DM::drawGUI(screenWidth, screenHeight, circuit);
+		
+        EndDrawing();
 	}
 
     CloseWindow();
